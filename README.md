@@ -2,7 +2,7 @@ A simple low-level battery monitor daemon for your minimal Debian or Ubuntu buil
 
 Will monitor your battery minutes left, send a terminal notification at 30m left, and will hibernate at 10m
 
-Requires: `pm-utils acpi espeak bc`
+Requires: `pm-utils acpi bc`
 
 #### installation
 - Place daemon/battery-monitor into your /etc/init.d
