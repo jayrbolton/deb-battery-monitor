@@ -4,6 +4,7 @@ SLEEP_TIME=5   # Default time between checks.
 BUFFER_TIME=2  # Shutdown this many minutes before battery dies.
 
 while [ true ]; do
+  notify-send 'monitoring...'
   if [[ -n $(acpi -b | grep -i discharging) ]]; then
     remaining_time=$(acpi -b | awk '{print $(NF-1)}')
     hours=$(date --date="$remaining_time" +%H)
