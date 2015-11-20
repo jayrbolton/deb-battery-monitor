@@ -2,29 +2,30 @@
 
 SLEEP_TIME=5   # Default time between checks.
 BUFFER_TIME=2  # Shutdown this many minutes before battery dies.
+MAINUSER=$(cat /etc/passwd|grep 1000|sed "s/:.*$//g")
 
 while [ true ]; do
-  notify-send 'monitoring...'
   if [[ -n $(acpi -b | grep -i discharging) ]]; then
     remaining_time=$(acpi -b | awk '{print $(NF-1)}')
     hours=$(date --date="$remaining_time" +%H)
     minutes=$(date --date="$remaining_time" +%M)
+    remaining_mins=$(($hours * 60 + $minutes))
     
-    if [[ $minutes -gt 30 ]]; then
+    if [[ $remaining_mins -gt 30 ]]; then
         SLEEP_TIME=10
     fi
-    if [[ $minutes -le 30 ]]; then
+    if [[ $remaining_mins -le 30 ]]; then
         SLEEP_TIME=5
-        notify-send "Battery low" "Hack the planet! You have $minutes minutes."
+        wall "Battery low" "Hack the planet! You have $remaining_mins minutes."
     fi
-    if [[ $minutes -le 10 ]]; then
+    if [[ $remaining_mins -le 10 ]]; then
         SLEEP_TIME=2
-        notify-send "Battery low." "You're in the butter zone now, baby. You have $minutes minutes."
+        wall "Battery low." "You're in the butter zone now, baby. You have $remaining_mins minutes."
     fi
-    if [[ $minutes -le 5 ]]; then
+    if [[ $remaining_mins -le 5 ]]; then
         SLEEP_TIME=1
-        notify-send "Battery low." "This is the end my friend. Thank you for calling. System now hibernating..."
-        # pm-hibernate
+        wall "Battery low." "This is the end my friend. Thank you for calling. System now hibernating..."
+        pm-hibernate
     fi
   fi
   sleep ${SLEEP_TIME}m
