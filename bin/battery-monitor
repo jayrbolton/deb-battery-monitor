@@ -1,3 +1,5 @@
+#!/bin/bash
+
 SLEEP_TIME=5   # Default time between checks.
 BUFFER_TIME=2  # Shutdown this many minutes before battery dies.
 
@@ -6,23 +8,22 @@ while [ true ]; do
     remaining_time=$(acpi -b | awk '{print $(NF-1)}')
     hours=$(date --date="$remaining_time" +%H)
     minutes=$(date --date="$remaining_time" +%M)
-    remaining_minutes=$(echo "$hours*60 + $minute - $BUFFER_TIME" | bc)
     
-    if [[ $remaining_minutes -gt 30 ]]; then
+    if [[ $minutes -gt 30 ]]; then
         SLEEP_TIME=10
     fi
-    if [[ $remaining_minutes -le 30 ]]; then
+    if [[ $minutes -le 30 ]]; then
         SLEEP_TIME=5
-        wall "Battery low. System will shutdown in $remaining_minutes minutes." 2>&1 > /dev/null
+        notify-send "Battery low" "Hack the planet! You have $minutes minutes."
     fi
-    if [[ $remaining_minutes -le 10 ]]; then
+    if [[ $minutes -le 10 ]]; then
         SLEEP_TIME=2
-        wall "Battery low. System will shutdown in $remaining_minutes minutes." 2>&1 > /dev/null
+        notify-send "Battery low." "You're in the butter zone now, baby. You have $minutes minutes."
     fi
-    if [[ $remaining_minutes -le 5 ]]; then
+    if [[ $minutes -le 5 ]]; then
         SLEEP_TIME=1
-        wall "Battery low. System now hibernating..." 2>&1 > /dev/null
-        pm-hibernate
+        notify-send "Battery low." "This is the end my friend. Thank you for calling. System now hibernating..."
+        # pm-hibernate
     fi
   fi
   sleep ${SLEEP_TIME}m
