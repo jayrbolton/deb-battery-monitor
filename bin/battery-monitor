@@ -17,15 +17,28 @@ while [ true ]; do
     if [[ $remaining_mins -le 30 ]]; then
         SLEEP_TIME=5
         wall "Battery low" "Hack the planet! You have $remaining_mins minutes."
+        notify-send "Hack the planet! You have $remaining_mins minutes."
+    fi
+    if [[ $remaining_mins -le 25 ]]; then
+        SLEEP_TIME=5
+        notify-send "You have $remaining_mins minutes."
+    fi
+    if [[ $remaining_mins -le 20 ]]; then
+        SLEEP_TIME=5
+        notify-send "You have $remaining_mins minutes."
+    fi
+    if [[ $remaining_mins -le 15 ]]; then
+        SLEEP_TIME=1
+        notify-send "You have $remaining_mins minutes."
     fi
     if [[ $remaining_mins -le 10 ]]; then
-        SLEEP_TIME=2
-        wall "Battery low." "You're in the butter zone now, baby. You have $remaining_mins minutes."
+        SLEEP_TIME=1
+        notify-send "You're in the butter zone now, baby. You have $remaining_mins minutes."
     fi
     if [[ $remaining_mins -le 5 ]]; then
         SLEEP_TIME=1
-        wall "Battery low." "This is the end my friend. Thank you for calling. System now hibernating..."
-        pm-hibernate
+        notify-send "This is the end my friend. Thank you for calling. You have $remaining_mins minutes."
+        pm-suspend
     fi
   fi
   sleep ${SLEEP_TIME}m
